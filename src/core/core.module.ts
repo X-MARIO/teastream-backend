@@ -6,6 +6,8 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { getGraphQLConfig } from '@/src/core/config'
 import { IS_DEV_ENV } from '@/src/shared/utils'
 
+import { AccountModule } from '../modules/auth/account/account.module'
+
 import { PrismaModule } from './prisma/prisma.module'
 import { RedisModule } from './redis/redis.module'
 
@@ -22,7 +24,9 @@ import { RedisModule } from './redis/redis.module'
 			useFactory: getGraphQLConfig,
 			inject: [ConfigService],
 			imports: [ConfigModule]
-		})
+		}),
+		// qraphql
+		AccountModule
 	],
 	controllers: [],
 	providers: []
