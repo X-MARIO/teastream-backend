@@ -17,6 +17,7 @@ import { getGraphQLConfig } from '@/src/core/config'
 			driver: ApolloDriver,
 			useFactory: getGraphQLConfig,
 			inject: [ConfigService],
+			imports: [ConfigModule]
 		})
 	],
 	controllers: [],
