@@ -14,8 +14,24 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - teastream-backend
+
+  redis-stack:
+    container_name: redis-stack
+    image: redis/redis-stack:latest
+    restart: always
+    ports:
+      - "6379:6379" # Порт для Redis
+      - "8001:8001" # Порт для Redis Insight
+    environment:
+      - REDIS_ARGS=--requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_stack_data:/data
+    networks:
+      - teastream-backend
+
 volumes:
   postgres_data:
+  redis_stack_data:
 
 networks:
   teastream-backend:
