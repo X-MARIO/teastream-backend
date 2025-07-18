@@ -6,9 +6,10 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { verify } from 'argon2'
-import { Request } from 'express'
+import { Request, Response } from 'express'
 
 import { PrismaService } from '@/src/core/prisma'
+import { ms, parseBoolean, StringValue } from '@/src/shared/utils'
 
 import { LoginInput } from './inputs'
 
@@ -54,24 +55,39 @@ export class SessionService {
 					)
 				}
 
-				resolve({ user })
+				resolve(user)
 			})
 		})
 	}
 
-	public async logout(req: Request) {
+	public async logout(req: Request, res: Response) {
 		return new Promise((resolve, reject) => {
 			req.session.destroy(err => {
 				if (err) {
 					return reject(
 						new InternalServerErrorException(
-							'Не удалось завершить сессию'
+							'Не удалось завершить сессию. Возможно, возникла проблема с сервером или сессия уже была завершена.'
 						)
 					)
 				}
-
-				req.res?.clearCookie(
-					this.configService.getOrThrow<string>('SESSION_NAME')
+				res.clearCookie(
+					this.configService.getOrThrow<string>('SESSION_NAME'),
+					{
+						path: '/',
+						domain: this.configService.getOrThrow<string>(
+							'SESSION_DOMAIN'
+						),
+						httpOnly: parseBoolean(
+							this.configService.getOrThrow<string>(
+								'SESSION_HTTP_ONLY'
+							)
+						),
+						secure: parseBoolean(
+							this.configService.getOrThrow<string>(
+								'SESSION_SECURE'
+							)
+						)
+					}
 				)
 				resolve(true)
 			})
