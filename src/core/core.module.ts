@@ -7,6 +7,7 @@ import { getGraphQLConfig } from '@/src/core/config'
 import { IS_DEV_ENV } from '@/src/shared/utils'
 
 import { AccountModule } from '../modules/auth/account/account.module'
+import { SessionModule } from '../modules/auth/session/session.module'
 
 import { PrismaModule } from './prisma/prisma.module'
 import { RedisModule } from './redis/redis.module'
@@ -26,7 +27,8 @@ import { RedisModule } from './redis/redis.module'
 			imports: [ConfigModule]
 		}),
 		// qraphql
-		AccountModule
+		AccountModule,
+		SessionModule
 	],
 	controllers: [],
 	providers: []
